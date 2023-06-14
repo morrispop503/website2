@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Guess the Number</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <h1>Guess the Number</h1>
+    <p>Ik heb een getal tussen 1 en 100 in gedachten. Kun jij het raden?</p>
+    
+    <input type="number" id="guessInput" onkeydown="handleEnter(event)">
+    <button onclick="checkGuess()">Gokken</button>
+    <p id="result"></p>
+    <p id="attempts"></p>
+    
+    <script>
+        var secretNumber;
+        var maxAttempts = 20;
+        var attempts;
+
+        function startGame() {
+            secretNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            document.getElementById("result").textContent = "";
+            document.getElementById("attempts").textContent = "";
+            document.getElementById("guessInput").disabled = false;
+            document.getElementById("guessInput").value = "";
+            document.getElementById("guessInput").focus();
+        }
+
+        function checkGuess() {
+            var guessInput = document.getElementById("guessInput");
+            var guess = parseInt(guessInput.value);
+            attempts++;
+
+            var result = document.getElementById("result");
+            if (guess === 12345) {
+                result.textContent = "Cheat code geactiveerd! Het geheime getal is: " + secretNumber;
+                guessInput.value = "";
+                guessInput.focus();
+                return;
+            } else if (guess === 54321) {
+                maxAttempts += 5;
+                result.textContent = "Cheat code geactiveerd! Je hebt nu " + maxAttempts + " pogingen!";
+                guessInput.value = "";
+                guessInput.focus();
+                return;
+            }
+
+            if (guess < secretNumber) {
+                result.textContent = "Te laag!";
+            } else if (guess > secretNumber) {
+                result.textContent = "Te hoog!";
+            } else {
+                result.textContent = "Goed gedaan! Je hebt het getal geraden in " + attempts + " pogingen!";
+                guessInput.disabled = true;
+                document.getElementById("restartButton").disabled = false;
+                return;
+            }
+
+            if (attempts === maxAttempts) {
+                result.textContent = "Helaas, je hebt het getal niet geraden. Het geheime getal was " + secretNumber + ".";
+                guessInput.disabled = true;
+                document.getElementById("restartButton").disabled = false;
+            }
+
+            document.getElementById("attempts").textContent = "Aantal pogingen: " + attempts;
+
+            guessInput.value = "";
+            guessInput.focus();
+        }
+
+        function restartGame() {
+            startGame();
+            document.getElementById("restartButton").disabled = true;
+        }
+
+        function handleEnter(event) {
+            if (event.keyCode === 13) {
+                checkGuess();
+            }
+        }
+
+        startGame();
+    </script>
+    
+    <button id="restartButton" onclick="restartGame()" disabled>Opnieuw starten</button>
+</body>
+</html>
